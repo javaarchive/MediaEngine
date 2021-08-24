@@ -1,0 +1,27 @@
+{
+  "name": "MediaEngine",
+  "version": "1.0.0",
+  "description": "amazing alexa skill to play videos",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/javaarchive/MediaEngine.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "GPL",
+  "bugs": {
+    "url": "https://github.com/javaarchive/MediaEngine/issues"
+  },
+  "homepage": "https://github.com/javaarchive/MediaEngine#readme",
+  "dependencies": {
+    "ask-sdk": "^2.11.0",
+    "ask-sdk-core": "^2.11.0",
+    "ask-sdk-express-adapter": "^2.11.0",
+    "express": "^4.17.1"
+  }
+}
