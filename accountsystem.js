@@ -4,6 +4,14 @@ db = require("./keyvgoodies")(db);
 let loginCodeDB = new Keyv();
 loginCodeDB = require("./keyvgoodies")(loginCodeDB);
 
+const alexaSlotIDtoProp = {
+  "preffered_mediatype": "prefferedMediaForm",
+  "content_provider": "contentProvider",
+  "search_backend": "ytSearchMode",
+  "youtube_module": "ytMode"
+};
+
+
 class Account{
   // checking out some newer js features instead of just writing all the vars in constructor
 
@@ -43,7 +51,7 @@ class Account{
       }
     }
     let accData = await db.get(id); 
-    return (new Account(accData, uid));
+    return (new Account(accData, id));
   }
 
   async nuke(){
@@ -52,6 +60,14 @@ class Account{
     }else{
       throw "Nuking is not allowed in production. ";
     }
+  }
+
+  async setPropFromSlots(settingID, value){
+    if(settingID in alexaSlotIDtoProp){
+      let prop = alexaSlotIDtoProp[settingID];
+      this[prop] = value;
+    }
+    await this.save();
   }
 
   async save(){

@@ -21,7 +21,7 @@ module.exports =  {
       let slots = alexautils.getSlots(handlerInput);
       let settingID = alexautils.getSlotValueID(slots.setting);
       let acc = await Account.getFromID(Alexa.getUserId(handlerInput.requestEnvelope));
-      
+      await acc.setPropFromSlots(settingID, parseInt(slots.value.value));      
 
 
       let session = alexautils.getSession(handlerInput);
@@ -29,7 +29,7 @@ module.exports =  {
       alexautils.saveSession(handlerInput, session);
 
 
-      let resp = handlerInput.responseBuilder.speak("Setting Change Applied.").withSimpleCard("Setting Change applied","You just changed the value of \"" + slots.setting.value + "\" to " + slots.value.value).reprompt("Next Command?");
+      let resp = handlerInput.responseBuilder.speak("Setting Change Applied.").withSimpleCard("Setting Change applied","You just changed the value of \"" + slots.setting.value + "\" to " + slots.value.value + " go to bit.ly/mediaskill for an explanation on what these numbers mean. ").reprompt("Next Command?");
       console.log(resp);
       return resp.getResponse();
 
