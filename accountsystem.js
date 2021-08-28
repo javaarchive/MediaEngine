@@ -8,10 +8,17 @@ class Account{
   // checking out some newer js features instead of just writing all the vars in constructor
 
   contentProvider = "youtube";
-  mode = "node-ytdl";
+  ytMode = "node-ytdl";
+  ytSearchMode = "invidious";
   isAdmin = false;
 
-  constructor(data){
+  prefferedMediaForm = "audio";
+
+  constructor(data,uid){
+    if(!data || !uid){
+      throw "user id and data fields are required to initalize Account";
+    }
+
     if(data.mode){
       this.mode = data.mode;
     }
@@ -22,15 +29,21 @@ class Account{
     if(data.isAdmin){
       this.isAdmin = data.isAdmin;
     }
+
+    this.uid = uid;
   }
 
-  static async getFromID(id){
+  static async getFromID(id, autocreate = true){
     id = id.toString();
     if(!(await db.has(id))){
-      throw "Account does not exist";
+      if(autocreate){
+        await (new Account({},id)).save();
+      }else{
+        throw "Account does not exist";
+      }
     }
     let accData = await db.get(id); 
-    return (new Account(accData));
+    return (new Account(accData, uid));
   }
 
   async nuke(){
@@ -41,6 +54,15 @@ class Account{
     }
   }
 
+  async save(){
+    await db.set(this.uid, {
+      mode: this.mode,
+      isAdmin: this.isAdmin,
+      contentProvider: this.contentProvider,
+      lastSaved: Date.now(),
+      prefferedMediaForm: this.prefferedMediaForm
+    })
+  }
 }
 
 let loginCodeManager = {
@@ -51,9 +73,11 @@ let loginCodeManager = {
     });
   },
   hasCode: async function(code) {
+    console.log("Check has ",code);
     if(!(await loginCodeDB.has(code))){
       return false;
     }else{
+      console.log("Fetching ",code);
       let loginDetails = await loginCodeDB.get(code);
       if(loginDetails.expireTime > Date.now()){
         return false;
@@ -61,6 +85,9 @@ let loginCodeManager = {
         return true;
       }
     }
+  },
+  async getUserForCode(code){
+    return (await loginCodeDB.get(code)).uid;
   }
 }
 

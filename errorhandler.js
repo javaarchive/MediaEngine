@@ -1,8 +1,9 @@
 const Alexa = require("ask-sdk-core");
 
 console.log("Loaded Error handler");
+
 module.exports = {
-  canHandle() {
+  canHandle(handlerInput, error) {
     return true;
   },
   handle(handlerInput, error) {

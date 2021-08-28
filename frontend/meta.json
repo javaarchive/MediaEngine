@@ -1,0 +1,7 @@
+{
+  "name": "Spartan",
+  "type":"spa",
+  "paths": [
+    "/"
+  ]
+}
