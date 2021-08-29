@@ -44,22 +44,22 @@ module.exports = {
       tok = nanoid();
     }
     dataTransferBus.set(tok,data);
-    return;
+    return tok;
   },
 
   getTransfer: (tok) => {
    if(dataTransferBus.has(tok)){
-      let acc = dataTransferBus.get(tok);
+      let data = dataTransferBus.get(tok);
       dataTransferBus.delete(tok);
-      return acc;
+      return data;
     }else{
       return null;
     }
   },
   peekTransfer: (tok) => {
    if(dataTransferBus.has(tok)){
-      let acc = dataTransferBus.get(tok);
-      return acc;
+      let data = dataTransferBus.get(tok);
+      return data;
     }else{
       return null;
     }
