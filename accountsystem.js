@@ -1,44 +1,70 @@
 const Keyv = require("keyv");
+
+const config = require("./config");
+
 let db = new Keyv("sqlite://database.sqlite"); // make sure repl hides this in some way
 db = require("./keyvgoodies")(db);
 let loginCodeDB = new Keyv();
 loginCodeDB = require("./keyvgoodies")(loginCodeDB);
 
+
 const alexaSlotIDtoProp = {
   "preffered_mediatype": "prefferedMediaForm",
   "content_provider": "contentProvider",
   "search_backend": "ytSearchMode",
-  "youtube_module": "ytMode"
+  "youtube_module": "ytMode",
+  ...(config.settingIDtoPropExtensions || {})
 };
+
 
 
 class Account{
   // checking out some newer js features instead of just writing all the vars in constructor
 
-  contentProvider = "youtube";
-  ytMode = "node-ytdl";
-  ytSearchMode = "invidious";
+  contentProvider = config.defaults.contentProvider;
+  ytMode = config.defaults.ytMode;
+  ytSearchMode = config.defaults.ytSearchMode;
   isAdmin = false;
 
-  prefferedMediaForm = "audio";
+  prefferedMediaForm = config.defaults.prefferedMediaForm;
+  prefersDirectStreams = config.defaults.prefersDirectStreams;
 
   constructor(data,uid){
     if(!data || !uid){
       throw "user id and data fields are required to initalize Account";
     }
 
-    if(data.mode){
-      this.mode = data.mode;
-    }
-    if(data.contentProvider){
-      this.contentProvider = data.contentProvider;
-    }
-
-    if(data.isAdmin){
-      this.isAdmin = data.isAdmin;
+    for([key,value] of Object.entries(data)){
+      this[key] = value;
     }
 
     this.uid = uid;
+  }
+
+  async check(){
+    let allGood = true;
+    if(!(this.contentProvider in config.contentProviders)){
+      console.log("Reset User content provider to default because user was using a content provider that is now disabled");
+      this.contentProviders = config.defaults.contentProvider;
+      allGood = false;
+    }
+    if(!allGood){
+      await this.save();
+    }
+  }
+
+  getContentProvider(name){
+    return (new require(config.contentProviders[name]))(config, this.summarize());
+  }
+
+  summarize(){
+    return {
+      isAdmin: this.isAdmin,
+      prefferedMediaForm: this.prefferedMediaForm,
+      contentProvider: this.contentProvider,
+      ytMode: this.ytMode,
+      ytSearchMode: this.ytSearchMode
+    }
   }
 
   static async getFromID(id, autocreate = true){

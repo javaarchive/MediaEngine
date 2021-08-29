@@ -9,5 +9,20 @@ module.exports = {
     "https://ytprivate.com",
     "https://invidious-us.kavin.rocks",
     "https://inv.riverside.rocks"
-  ]
+  ],
+  defaults: {
+    contentProvider: "youtube",
+    ytMode: "node-ytdl",
+    ytSearchMode: "invidious",
+    prefferedMediaForm: "audio",
+    prefersDirectStreams: false
+  },
+  contentProviders: {
+    "youtube": "./contentproviders/youtube"
+  },
+  settingIDtoPropExtensions: {
+
+  },
+  apiUserAgent: "Media Engine Alexa Skill 1.0 (bit.ly/mediaengine)",
+  selfURL: "https://MediaEngine.javaarchive.repl.co"
 };

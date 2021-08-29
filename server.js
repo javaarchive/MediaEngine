@@ -17,6 +17,8 @@ const { loginCodeManager, Account } = require("./accountsystem");
 
 const frontendMeta = require("./frontend/meta.json");
 
+const alexautils = require("./alexautils");
+
 app.use(morgan());
 
 const { ExpressAdapter } = require("ask-sdk-express-adapter");
@@ -33,6 +35,14 @@ api.use(rateLimit({
   max: 10
 }));
 
+app.get("/streams/:token/:suffix", (req,res) => {
+  if(req.params.token && alexautils.peekTransfer(req.params.token)){
+    let streamDetails = alexautils.getTransfer(req.params.token);
+  }else{
+    res.set("Content-Type", )
+    res.send("No stream found");
+  }
+})
 
 api.get('/logincode/:code', async (req, res) => {
   if (!req.params.code || !parseInt(req.params.code)) {
