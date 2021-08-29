@@ -19,6 +19,9 @@ const frontendMeta = require("./frontend/meta.json");
 
 const alexautils = require("./alexautils");
 
+const CONSTANTS = require("./constants");
+
+
 app.use(morgan());
 
 const { ExpressAdapter } = require("ask-sdk-express-adapter");
@@ -38,8 +41,10 @@ api.use(rateLimit({
 app.get("/streams/:token/:suffix", (req,res) => {
   if(req.params.token && alexautils.peekTransfer(req.params.token)){
     let streamDetails = alexautils.getTransfer(req.params.token);
+    res.set("Content-Type", CONSTANTS.mimetypes["." + streamDetails["container"]]);
+    streamDetails.stream.pipe(res);
   }else{
-    res.set("Content-Type", )
+    res.sendStatus(404);
     res.send("No stream found");
   }
 })

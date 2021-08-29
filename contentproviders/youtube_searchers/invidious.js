@@ -19,8 +19,8 @@ class InvidiousSearch{
     let searchResp = await fetch(instanceBaseURL + "/api/v1/search?q=" + encodeURIComponent(query) + "&type=" + mediaTypesToInvidiousTerminology[opts.type || "any"],{
       "User-Agent": config.apiUserAgent
     });
-    if(!resp.ok){
-      throw instanceBaseURL + " gave us a " + res.status + " while searching";
+    if(!searchResp.ok){
+      throw instanceBaseURL + " gave us a " + searchResp.status + " while searching";
     }
     let results = await searchResp.json();
     if(opts.type == "collection"){
@@ -37,6 +37,7 @@ class InvidiousSearch{
         item.resultType = "collection"
       }else if(item.type == "video"){
         item.resultType = "mediaitem";
+        item.id = item.videoId;
       }
     });
     return results;

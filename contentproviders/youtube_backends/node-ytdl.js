@@ -5,7 +5,8 @@ class YtdlCoreBackend{
     
   }
 
-  async loadItem(videoID){
+  async loadItem(video){
+    let videoID = video.id;
     // supports both urls and ids
     if(!(videoID.includes("youtube"))){
       videoID = "http://www.youtube.com/watch?v=" + videoID; 
@@ -15,8 +16,8 @@ class YtdlCoreBackend{
 
   createStream(audioonly = false){
     return [ytdl.downloadFromInfo(this.vidinfo, {
-      quality: "highestaudio"
-    }), ytdl.chooseFormat(this.vidinfo.formats, {quality: "highestaudio"}).container];
+      quality: audioonly?"highestaudio":"highest"
+    }), ytdl.chooseFormat(this.vidinfo.formats, {quality: audioonly?"highestaudio":"highest"}).container];
   }
 
 }

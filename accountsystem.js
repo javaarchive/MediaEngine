@@ -34,7 +34,7 @@ class Account{
       throw "user id and data fields are required to initalize Account";
     }
 
-    for([key,value] of Object.entries(data)){
+    for(const [key,value] of Object.entries(data)){
       this[key] = value;
     }
 
@@ -45,7 +45,7 @@ class Account{
     let allGood = true;
     if(!(this.contentProvider in config.contentProviders)){
       console.log("Reset User content provider to default because user was using a content provider that is now disabled");
-      this.contentProviders = config.defaults.contentProvider;
+      this.contentProvider = config.defaults.contentProvider;
       allGood = false;
     }
     if(!allGood){
@@ -53,8 +53,15 @@ class Account{
     }
   }
 
-  getContentProvider(name){
-    return (new require(config.contentProviders[name]))(config, this.summarize());
+  async getContentProvider(){
+    await this.check();
+    return this.getContentProviderByName(this.contentProvider);
+  }
+
+  getContentProviderByName(name){
+    console.log("Getting Content Provider",name,config.contentProviders[name]);
+    let ContentProvider = require(config.contentProviders[name]);
+    return (new ContentProvider(config, this.summarize()));
   }
 
   summarize(){

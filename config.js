@@ -6,9 +6,11 @@ module.exports = {
     "python-youtubedl" // python youtubedl fetch url
   ],
   invidiousInstances: [
-    "https://ytprivate.com",
-    "https://invidious-us.kavin.rocks",
-    "https://inv.riverside.rocks"
+ //   "https://ytprivate.com",
+ //  "https://vid.puffyan.us",
+    "https://inv.riverside.rocks",
+ //   "https://invidious.silkky.cloud",
+ //   "https://yewtu.be"
   ],
   defaults: {
     contentProvider: "youtube",

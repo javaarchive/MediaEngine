@@ -24,19 +24,22 @@ class YoutubeContentProvider{
   }
 
   async search(query, opts){
-    let Searcher = loadSearcher(this.userConfig.ytSearchMode);
+    let Searcher = this.loadSearcher(this.userConfig.ytSearchMode);
     let searcherInst = new Searcher();
-    await searcherInst.search(query, opts);
+    return (await searcherInst.search(query, opts));
   }
 
   async generatePlaybackResponse(handlerInput, item){
     if(item.resultType == "mediaitem"){
-      let backend = 
+      let Backend = this.loadBackend(this.userConfig.ytMode); 
       if(item.type == "video"){
+        let backend = new Backend();
+        await backend.loadItem(item);
         if(userSpecificConfig.prefersDirectStreams){
-          
+          throw "Not Implemented";
         }else{
-
+          let generatedURL = await backend.createStream(this.userConfig.prefferedMediaForm == "audio");
+          return handlerInput.responseBuilder.speak("Playing").addAudioPlayerPlayDirective("REPLACE_ALL",generatedURL,item.id,0);
         }
       }
     }else{
