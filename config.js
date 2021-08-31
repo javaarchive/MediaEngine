@@ -16,7 +16,7 @@ module.exports = {
     contentProvider: "youtube",
     ytMode: "node-ytdl",
     ytSearchMode: "invidious",
-    prefferedMediaForm: "audio",
+    preferedMediaForm: "audio",
     prefersDirectStreams: false
   },
   contentProviders: {
@@ -26,5 +26,10 @@ module.exports = {
 
   },
   apiUserAgent: "Media Engine Alexa Skill 1.0 (bit.ly/mediaengine)",
-  selfURL: "https://MediaEngine.javaarchive.repl.co"
+  selfURL: "https://MediaEngine.javaarchive.repl.co",
+  propChoices: {
+    preferedMediaForm: ["audio","video"],
+    ytMode: ["node-ytdl","invidious"],
+    prefersDirectStreams: [false,true]
+  }
 };

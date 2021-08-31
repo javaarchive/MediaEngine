@@ -1,5 +1,10 @@
 
 const mediautils = require("../mediautils");
+const alexautils = require("../alexautils");
+const generators = require("../generators");
+
+const config = require("../config");
+
 
 class YoutubeContentProvider{
   constructor(config, userSpecificConfig){
@@ -34,14 +39,58 @@ class YoutubeContentProvider{
     if(item.resultType == "mediaitem"){
       let Backend = this.loadBackend(this.userConfig.ytMode); 
       if(item.type == "video"){
-        let backend = new Backend();
-        await backend.loadItem(item);
         if(this.userConfig.prefersDirectStreams){
-          throw "Not Implemented";
+          let backend = new Backend();
+          await backend.loadItem(item);
+          let generatedURL = await backend.createURL(this.userConfig);
+          if(this.userConfig.preferedMediaForm == "audio"){
+            return handlerInput.responseBuilder.speak("Playing").addAudioPlayerPlayDirective("REPLACE_ALL",generatedURL,item.id,0,null,{
+              title: item.title || "Unknown Item",
+              subtitle: item.producer || config.brand,
+              art:{
+                sources:[
+                  {
+                    url:generators.genBackground()
+                  }
+                ]
+              },
+              backgroundImage:{
+                sources:[
+                  {
+                    url: item.thumbnail || generators.genAlbumFallback()
+                  }
+                ]
+              }
+            });
+          }else if(this.userConfig.preferedMediaForm == "video"){
+            return handlerInput.responseBuilder.speak("Playing").addVideoAppLaunchDirective(generatedURL,item.title || "Unknown Item",config.brand || item.producer);
+          }
         }else{
-          let [generatedStream,container] = await backend.createStream(this.userConfig.prefferedMediaForm == "audio");
-          let generatedURL = await mediautils.createPrefixUrlForMediaStream(generatedStream, container);
-          return handlerInput.responseBuilder.speak("Playing").addAudioPlayerPlayDirective("REPLACE_ALL",generatedURL,item.id,0);
+          console.log("Generating url");
+          let generatedURL = await mediautils.createIndirectStreamURL(item, Backend, this.userConfig);
+          console.log("uconfig",this.userConfig);
+          if(this.userConfig.preferedMediaForm == "audio"){
+            return handlerInput.responseBuilder.speak("Playing").addAudioPlayerPlayDirective("REPLACE_ALL",generatedURL,item.id,0,null,{
+              title: item.title || "Unknown Item",
+              subtitle: item.producer || config.brand,
+              art:{
+                sources:[
+                  {
+                    url:generators.genBackground()
+                  }
+                ]
+              },
+              backgroundImage:{
+                sources:[
+                  {
+                    url: item.thumbnail || generators.genAlbumFallback()
+                  }
+                ]
+              }
+            });
+          }else if(this.userConfig.preferedMediaForm == "video"){
+            return handlerInput.responseBuilder.speak("Playing").addVideoAppLaunchDirective(generatedURL,item.title || "Unknown Item",config.brand || item.producer);
+          }
         }
       }
     }else{

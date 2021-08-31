@@ -1,5 +1,8 @@
 {
   "en": {
-    "settingsList": "List of settings, \"media form\" "
+    "settingsList": "List of settings, \"media form\" ",
+    "test":"test",
+    "apply_setting_success": "Setting Change Applied",
+    "apply_setting_fail": "Failed to apply setting due to invalid input. Reference the website at bit.ly/mediaskill to fix this"
   }
 }

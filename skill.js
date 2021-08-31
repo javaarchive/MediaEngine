@@ -15,7 +15,11 @@ handlersList = handlersList.map(require).map(handler => {
   handler.handle = async (handlerInput) => {
     console.log("Invoke handle");
     try{
-      console.log("Enter Intent Processing",Alexa.getRequestType(handlerInput.requestEnvelope),(Alexa.getRequestType(handlerInput.requestEnvelope) == "IntentRequest")?Alexa.getIntentName(handlerInput.requestEnvelope):"No Intent");
+      try{
+        console.log("Enter Intent Processing",Alexa.getRequestType(handlerInput.requestEnvelope),(Alexa.getRequestType(handlerInput.requestEnvelope) == "IntentRequest")?Alexa.getIntentName(handlerInput.requestEnvelope):"No Intent");
+      }catch(ex){
+        console.log("Intent Logging Failure");
+      }
       let result = (await origHandle(handlerInput));
       console.log("Exit Intent Processing");
       console.log("Result from original handle func ",JSON.stringify(result,null,4));

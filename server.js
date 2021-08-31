@@ -39,13 +39,41 @@ api.use(rateLimit({
 }));
 
 app.get("/streams/:token/:suffix", (req,res) => {
-  if(req.params.token && alexautils.peekTransfer(req.params.token)){
+  if(req.params.token && alexautils.peekTransfer(req.params.token) && alexautils.peekTransfer(req.params.token).type === "v1stream"){
     let streamDetails = alexautils.getTransfer(req.params.token);
     res.set("Content-Type", CONSTANTS.mimetypes["." + streamDetails["container"]]);
     streamDetails.stream.pipe(res);
   }else{
     res.sendStatus(404);
     res.send("No stream found");
+  }
+});
+
+
+app.get("/streams_v2/:token/:suffix", async (req,res) => {
+  if(req.params.token && alexautils.peekTransfer(req.params.token) && alexautils.peekTransfer(req.params.token).type == "v2stream"){
+    let actionDetails = alexautils.peekTransfer(req.params.token);
+    let item = actionDetails.item;
+    let backend = actionDetails.backendInst;
+    let userConfig = actionDetails.userConfig;
+    let streamDetails;
+    if(actionDetails.cachedStreamDetails){
+      streamDetails = actionDetails.cachedStreamDetails;
+    }else{
+      await backend.loadItem(item);
+      streamDetails = await backend.createStream(userConfig);
+      actionDetails.cachedStreamDetails = streamDetails;
+    }
+    let stream = streamDetails.stream;
+    // console.log(streamDetails);
+    res.set("Content-Type", CONSTANTS.mimetypes["." + streamDetails["container"]]);
+    stream.pipe(res);
+    if(userConfig.preferedMediaForm == "audio"){
+      alexautils.getTransfer(req.params.token); // remove
+    }
+  }else{
+    res.sendStatus(404);
+    // res.send("No stream found");
   }
 })
 

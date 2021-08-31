@@ -1,0 +1,314 @@
+{
+    "interactionModel": {
+        "languageModel": {
+            "invocationName": "media engine",
+            "intents": [
+                {
+                    "name": "AMAZON.CancelIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.HelpIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.StopIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.NavigateHomeIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.FallbackIntent",
+                    "samples": []
+                },
+                {
+                    "name": "SearchSongIntent",
+                    "slots": [
+                        {
+                            "name": "songname",
+                            "type": "AMAZON.MusicVideo",
+                            "samples": [
+                                "I'd like the song {songname}",
+                                "{songname}"
+                            ]
+                        }
+                    ],
+                    "samples": [
+                        "get the song {songname}",
+                        "get songs with the name {songname}",
+                        "find songs matching {songname}",
+                        "find songs with the name {songname}"
+                    ]
+                },
+                {
+                    "name": "GenerateLoginCode",
+                    "slots": [],
+                    "samples": [
+                        "make me a sign in code",
+                        "give me a signin code",
+                        "create a login code",
+                        "log me in to the website",
+                        "generate a web login code"
+                    ]
+                },
+                {
+                    "name": "StartPlaybackSettings",
+                    "slots": [],
+                    "samples": [
+                        "change the playback settings",
+                        "change my playback settings",
+                        "switch my playback mode",
+                        "modify playback settings",
+                        "change playback modes",
+                        "change playback settings"
+                    ]
+                },
+                {
+                    "name": "AMAZON.PauseIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.ResumeIntent",
+                    "samples": []
+                },
+                {
+                    "name": "ChangeSettingIntent",
+                    "slots": [
+                        {
+                            "name": "setting",
+                            "type": "SettingType"
+                        },
+                        {
+                            "name": "value",
+                            "type": "AMAZON.NUMBER"
+                        }
+                    ],
+                    "samples": [
+                        "change {setting} to {value}"
+                    ]
+                },
+                {
+                    "name": "SwitchContentProvider",
+                    "slots": [
+                        {
+                            "name": "contentprovider",
+                            "type": "ContentProvider"
+                        }
+                    ],
+                    "samples": [
+                        "go to {contentprovider}",
+                        "open {contentprovider}",
+                        "change to {contentprovider}",
+                        "switch my content provider to {contentprovider}",
+                        "switch to {contentprovider}"
+                    ]
+                },
+                {
+                    "name": "PlaySingleMediaItemIntent",
+                    "slots": [
+                        {
+                            "name": "name",
+                            "type": "AMAZON.MusicRecording"
+                        }
+                    ],
+                    "samples": [
+                        "find the song with the name {name}",
+                        "find the song {name}",
+                        "pull up the song {name}",
+                        "give me the song {name}",
+                        "play the music video {name}",
+                        "play the music {name}",
+                        "play the song {name}"
+                    ]
+                }
+            ],
+            "types": [
+                {
+                    "name": "SettingType",
+                    "values": [
+                        {
+                            "id": "preffered_mediatype",
+                            "name": {
+                                "value": "preferred media",
+                                "synonyms": [
+                                    "media type",
+                                    "content form",
+                                    "media form",
+                                    "media type",
+                                    "preffered file type",
+                                    "preffered media type"
+                                ]
+                            }
+                        },
+                        {
+                            "id": "content_provider",
+                            "name": {
+                                "value": "content provider",
+                                "synonyms": [
+                                    "media server",
+                                    "media provider",
+                                    "media service",
+                                    "content service",
+                                    "media application",
+                                    "media app"
+                                ]
+                            }
+                        },
+                        {
+                            "id": "search_backend",
+                            "name": {
+                                "value": "search backend",
+                                "synonyms": [
+                                    "query processer",
+                                    "search system",
+                                    "search engine"
+                                ]
+                            }
+                        },
+                        {
+                            "id": "youtube_module",
+                            "name": {
+                                "value": "youtube module",
+                                "synonyms": [
+                                    "youtube system",
+                                    "youtube engine",
+                                    "youtube backend"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "ContentProvider",
+                    "values": [
+                        {
+                            "id": "youtube",
+                            "name": {
+                                "value": "you tube",
+                                "synonyms": [
+                                    "you too",
+                                    "google video services",
+                                    "google video",
+                                    "youtube"
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        "dialog": {
+            "intents": [
+                {
+                    "name": "SearchSongIntent",
+                    "confirmationRequired": false,
+                    "prompts": {},
+                    "slots": [
+                        {
+                            "name": "songname",
+                            "type": "AMAZON.MusicVideo",
+                            "confirmationRequired": false,
+                            "elicitationRequired": true,
+                            "prompts": {
+                                "elicitation": "Elicit.Slot.65296122509.864721871523"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "GenerateLoginCode",
+                    "confirmationRequired": true,
+                    "prompts": {
+                        "confirmation": "Confirm.Intent.1081312111358"
+                    },
+                    "slots": []
+                },
+                {
+                    "name": "SwitchContentProvider",
+                    "confirmationRequired": false,
+                    "prompts": {},
+                    "slots": [
+                        {
+                            "name": "contentprovider",
+                            "type": "ContentProvider",
+                            "confirmationRequired": false,
+                            "elicitationRequired": true,
+                            "prompts": {
+                                "elicitation": "Elicit.Slot.603870851103.1478281781789"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "PlaySingleMediaItemIntent",
+                    "confirmationRequired": false,
+                    "prompts": {},
+                    "slots": [
+                        {
+                            "name": "name",
+                            "type": "AMAZON.MusicRecording",
+                            "confirmationRequired": false,
+                            "elicitationRequired": true,
+                            "prompts": {
+                                "elicitation": "Elicit.Slot.1218412748191.143170893392"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "delegationStrategy": "ALWAYS"
+        },
+        "prompts": [
+            {
+                "id": "Elicit.Slot.65296122509.864721871523",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "What's your search term?"
+                    },
+                    {
+                        "type": "PlainText",
+                        "value": "What would you like to search for in the songs category?"
+                    },
+                    {
+                        "type": "PlainText",
+                        "value": "What song what you like to search for?"
+                    }
+                ]
+            },
+            {
+                "id": "Confirm.Intent.1081312111358",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "Are you sure you want to create a temporary code to login?"
+                    }
+                ]
+            },
+            {
+                "id": "Elicit.Slot.603870851103.1478281781789",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "What service would you like to change to?"
+                    },
+                    {
+                        "type": "PlainText",
+                        "value": "What content provider would you like to switch to?"
+                    }
+                ]
+            },
+            {
+                "id": "Elicit.Slot.1218412748191.143170893392",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "What would you like me to play?"
+                    }
+                ]
+            }
+        ]
+    }
+}

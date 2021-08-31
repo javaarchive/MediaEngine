@@ -8,6 +8,7 @@ const generators = require("../generators");
 
 let {loginCodeManager, Account} = require("../accountsystem");
 
+const Lang = require("../lang");
 
 module.exports =  {
   canHandle(handlerInput) {
@@ -15,13 +16,21 @@ module.exports =  {
   },
   async handle(handlerInput) {
     try{
+      let lang = Lang.createLanguageInstance(handlerInput);
+
       console.log(alexautils.getSlots(handlerInput));
       //console.log(JSON.stringify(handlerInput.requestEnvelope.request.intent.slots, null, 4));
 
       let slots = alexautils.getSlots(handlerInput);
       let settingID = alexautils.getSlotValueID(slots.setting);
       let acc = await Account.getFromID(Alexa.getUserId(handlerInput.requestEnvelope));
-      await acc.setPropFromSlots(settingID, parseInt(slots.value.value));      
+      let successful = true;
+      
+      try{
+        await acc.setPropFromSlots(settingID, parseInt(slots.value.value)); 
+      }catch(ex){
+        successful = false;
+      }    
 
 
       let session = alexautils.getSession(handlerInput);
@@ -29,7 +38,7 @@ module.exports =  {
       alexautils.saveSession(handlerInput, session);
 
 
-      let resp = handlerInput.responseBuilder.speak("Setting Change Applied.").withSimpleCard("Setting Change applied","You just changed the value of \"" + slots.setting.value + "\" to " + slots.value.value + " go to bit.ly/mediaskill for an explanation on what these numbers mean. ").reprompt("Next Command?");
+      let resp = handlerInput.responseBuilder.speak(successful?lang.__("apply_setting_success"):lang.__("apply_setting_fail")).withSimpleCard(successful?lang.__("apply_setting_success"):lang.__("apply_setting_fail"),"You just changed the value of \"" + slots.setting.value + "\" to " + slots.value.value + " go to bit.ly/mediaskill for an explanation on what these numbers mean. ").reprompt("Next Command?");
       console.log(resp);
       return resp.getResponse();
 

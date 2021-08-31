@@ -14,6 +14,7 @@ class InvidiousSearch{
 
     return config.invidiousInstances[Math.floor(Math.random() * config.invidiousInstances.length)]; 
   }
+
   async search(query,opts){
     let instanceBaseURL = this.pickInstance();
     let searchResp = await fetch(instanceBaseURL + "/api/v1/search?q=" + encodeURIComponent(query) + "&type=" + mediaTypesToInvidiousTerminology[opts.type || "any"],{
@@ -38,6 +39,12 @@ class InvidiousSearch{
       }else if(item.type == "video"){
         item.resultType = "mediaitem";
         item.id = item.videoId;
+        if(item.videoThumbnails){
+          item.thumbnail = item.videoThumbnails.filter(thumb => thumb.quality.startsWith("max"))[0].url;
+        }
+        if(item.author){
+          item.producer = item.author;
+        }
       }
       return item;
     });

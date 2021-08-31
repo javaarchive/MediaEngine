@@ -5,7 +5,7 @@ module.exports = {
   createLanguageInstance: function(handerInput){
     return {
       "__": function(key){
-        return translations["en"][key];
+        return  translations["en"][key] || key;
       }
     }
   }

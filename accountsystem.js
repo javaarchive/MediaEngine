@@ -9,10 +9,11 @@ loginCodeDB = require("./keyvgoodies")(loginCodeDB);
 
 
 const alexaSlotIDtoProp = {
-  "preffered_mediatype": "prefferedMediaForm",
+  "preffered_mediatype": "preferedMediaForm",
   "content_provider": "contentProvider",
   "search_backend": "ytSearchMode",
   "youtube_module": "ytMode",
+  "direct_streaming":"prefersDirectStreams",
   ...(config.settingIDtoPropExtensions || {})
 };
 
@@ -26,7 +27,7 @@ class Account{
   ytSearchMode = config.defaults.ytSearchMode;
   isAdmin = false;
 
-  prefferedMediaForm = config.defaults.prefferedMediaForm;
+  preferedMediaForm = config.defaults.preferedMediaForm;
   prefersDirectStreams = config.defaults.prefersDirectStreams;
 
   constructor(data,uid){
@@ -67,10 +68,11 @@ class Account{
   summarize(){
     return {
       isAdmin: this.isAdmin,
-      prefferedMediaForm: this.prefferedMediaForm,
+      preferedMediaForm: this.preferedMediaForm,
       contentProvider: this.contentProvider,
       ytMode: this.ytMode,
-      ytSearchMode: this.ytSearchMode
+      ytSearchMode: this.ytSearchMode,
+      prefersDirectStreams: this.prefersDirectStreams
     }
   }
 
@@ -98,7 +100,11 @@ class Account{
   async setPropFromSlots(settingID, value){
     if(settingID in alexaSlotIDtoProp){
       let prop = alexaSlotIDtoProp[settingID];
-      this[prop] = value;
+      if(config.propChoices && config.propChoices[prop] && 0 <= value && value < config.propChoices[prop].length){
+        this[prop] = config.propChoices[prop][value];
+      }else{
+        throw "Out of range";
+      }
     }
     await this.save();
   }
@@ -109,7 +115,10 @@ class Account{
       isAdmin: this.isAdmin,
       contentProvider: this.contentProvider,
       lastSaved: Date.now(),
-      prefferedMediaForm: this.prefferedMediaForm
+      preferedMediaForm: this.preferedMediaForm,
+      prefersDirectStreams: this.prefersDirectStreams,
+      ytMode: this.ytMode,
+      ytSearchMode: this.ytSearchMode
     })
   }
 }

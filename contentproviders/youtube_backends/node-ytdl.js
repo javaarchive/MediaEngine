@@ -14,10 +14,11 @@ class YtdlCoreBackend{
     this.vidinfo = await ytdl.getInfo(videoID);
   }
 
-  createStream(audioonly = false){
-    return [ytdl.downloadFromInfo(this.vidinfo, {
+  createStream(userConfig){
+    const audioonly = userConfig.preferedMediaForm == "audio";
+    return {stream:ytdl.downloadFromInfo(this.vidinfo, {
       quality: audioonly?"highestaudio":"highest"
-    }), ytdl.chooseFormat(this.vidinfo.formats, {quality: audioonly?"highestaudio":"highest"}).container];
+    }), container:ytdl.chooseFormat(this.vidinfo.formats, {quality: audioonly?"highestaudio":"highest"}).container};
   }
 
 }
