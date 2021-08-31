@@ -22,7 +22,7 @@ const alexautils = require("./alexautils");
 const CONSTANTS = require("./constants");
 
 
-app.use(morgan());
+app.use(morgan('dev'));
 
 const { ExpressAdapter } = require("ask-sdk-express-adapter");
 
@@ -84,6 +84,16 @@ if(frontendMeta.type == "spa"){
     });
   })
 }
+
+// Debug adapter
+/*const { SkillRequestSignatureVerifier, TimestampVerifier } = require('ask-sdk-express-adapter');
+
+app.post('/',async (req,res) => {
+    console.log(typeof req.body);
+    await new SkillRequestSignatureVerifier().verify(req.body, req.headers);
+    await new TimestampVerifier().verify(req.body);
+    res.json(skill.invoke(JSON.parse(req.body)));
+});*/
 
 app.post('/', adapter.getRequestHandlers());
 

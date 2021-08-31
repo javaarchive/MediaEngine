@@ -14,7 +14,7 @@ module.exports =  {
   canHandle(handlerInput) {
     return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest' && Alexa.getIntentName(handlerInput.requestEnvelope) === 'PlaySingleMediaItemIntent';
   },
-  async handle(handlerInput) {
+  handle: async (handlerInput) => {
     try{
       let session = alexautils.getSession(handlerInput);
       session.state = STATES.MENU;
@@ -26,7 +26,9 @@ module.exports =  {
       let searchResults = await provider.search(alexautils.getSlots(handlerInput).name.value, {type: "mediaitem"});
       console.log("Got", searchResults.length, "results");
       let mediaItem = searchResults[0];
-      return (await provider.generatePlaybackResponse(handlerInput, mediaItem));
+      let playbackResponse = await provider.generatePlaybackResponse(handlerInput, mediaItem);
+      console.log("pr",playbackResponse);
+      return playbackResponse.getResponse();
     }catch(ex){
       console.log(ex);
     }

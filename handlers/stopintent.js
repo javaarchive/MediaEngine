@@ -19,7 +19,7 @@ module.exports = {
      //  console.log("Running StopIntent");
         const speakOutput = "Thanks for using " + config.brand + "!";
         if(Alexa.getRequestType(handlerInput.requestEnvelope) === 'SessionEndedRequest'){
-          return;
+          return handlerInput.responseBuilder.getResponse();
         }
         return handlerInput.responseBuilder
             .speak(speakOutput)

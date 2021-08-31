@@ -3,9 +3,9 @@ let config = require("./config");
 
 module.exports = {
   createPrefixUrlForMediaStream(stream, container){
-    return config.selfURL + "/streams/ " + alexautils.createTransfer({
+    return config.selfURL + "/streams/" + alexautils.createTransfer({
       stream: stream,
       container: container
-    }) + "media." + container;
+    }) + "/media." + container;
   }
 }

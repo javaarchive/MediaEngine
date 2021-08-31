@@ -1,5 +1,5 @@
 
-
+const mediautils = require("../mediautils");
 
 class YoutubeContentProvider{
   constructor(config, userSpecificConfig){
@@ -26,6 +26,7 @@ class YoutubeContentProvider{
   async search(query, opts){
     let Searcher = this.loadSearcher(this.userConfig.ytSearchMode);
     let searcherInst = new Searcher();
+    console.log("Querying",query,"with opts",opts);
     return (await searcherInst.search(query, opts));
   }
 
@@ -35,10 +36,11 @@ class YoutubeContentProvider{
       if(item.type == "video"){
         let backend = new Backend();
         await backend.loadItem(item);
-        if(userSpecificConfig.prefersDirectStreams){
+        if(this.userConfig.prefersDirectStreams){
           throw "Not Implemented";
         }else{
-          let generatedURL = await backend.createStream(this.userConfig.prefferedMediaForm == "audio");
+          let [generatedStream,container] = await backend.createStream(this.userConfig.prefferedMediaForm == "audio");
+          let generatedURL = await mediautils.createPrefixUrlForMediaStream(generatedStream, container);
           return handlerInput.responseBuilder.speak("Playing").addAudioPlayerPlayDirective("REPLACE_ALL",generatedURL,item.id,0);
         }
       }

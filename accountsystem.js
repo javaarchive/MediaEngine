@@ -135,7 +135,7 @@ let loginCodeManager = {
       }
     }
   },
-  async getUserForCode(code){
+  getUserForCode: async (code) => {
     return (await loginCodeDB.get(code)).uid;
   }
 }

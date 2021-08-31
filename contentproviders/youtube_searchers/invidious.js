@@ -39,6 +39,7 @@ class InvidiousSearch{
         item.resultType = "mediaitem";
         item.id = item.videoId;
       }
+      return item;
     });
     return results;
   }
